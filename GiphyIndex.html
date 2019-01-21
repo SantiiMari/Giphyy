@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Giphy Animals</title>
+    <style>
+        body{
+      background: darkgrey;
+  }
+  </style>
+</head>
+
+<body>
+    <button data-animal="Cat">Cat</button>
+    <button data-animal="tiger">Tiger</button>
+    <button data-animal="cow">Cow</button>
+    <button data-animal="Dog">Dog</button>
+    <button data-animal="snake">Snake</button>
+    <button data-animal="Chinchilla">Chinchilla</button>
+    <button data-animal="bird">Bird</button>
+    <button data-animal="puffin">Puffins</button>
+    <button data-animal="wolf">Wolf</button>
+
+    <div id="aniButton"></div>
+
+    <br>
+
+    <form id="animal-form">
+        <label for="animal-input">Add an Animal!!</label>
+        <input type="text" id="animal-input">
+
+        <br>
+
+        <!-- Button triggers new movie to be added -->
+        <input id="add-animal" type="submit" value="Add!">
+    </form>
+
+
+
+    <div id="gifs-appear-here">
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        aniArray = ["cat", "tiger", "cow", "dog", "snake", "chinchilla", "bird", "puffin", "wolf",]
+
+        var userInput = $("#animal-input").val().trim();
+        console.log(userInput);
+
+
+        $("button").on("click", function () {
+            var animal = $(this).attr("data-animal");
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                animal + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+                .then(function (response) {
+                    var results = response.data;
+                    var targetDiv = $('#gifs-appear-here');
+
+                    for (var i = 0; i < results.length; i++) {
+                        // console.log(results[i]);
+
+                        var gifDiv = $('<div>'); // <div>
+
+                        var thumbnailImg = $('<img>').attr('src', results[i].images.fixed_height.url);
+                        // console.log(thumbnailImg[0])
+
+                        gifDiv.append(thumbnailImg);
+                        console.log(gifDiv[0])
+
+                        targetDiv.prepend(gifDiv)
+                    }
+
+                });
+
+            function createButtons() {
+                $("#aniButton").empty();
+                // Loops through the array of TV Shows
+                for (var i = 0; i < aniArray.length; i++) {
+                    // Dynamicaly generates buttons for each TV Show in the array
+                    var newButton = $("<button>");
+                    // Adds a class of movie to our button
+                    newButton.addClass("btn btn-primary dynamicButtons");
+                    // Adds an id to the buttons
+                    newButton.attr("id", "showInput");
+                    // Added a data-attribute
+                    newButton.attr("data-name", tvShowsArray[i]);
+                    // Provided the initial button text
+                    newButton.text(aniArray[i]);
+                    // Added the button to the buttons-view div
+                    $("#aniButton").append(newButton);
+
+                }
+            };
+        });
+    </script>
+</body>
+
+</html>
